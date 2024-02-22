@@ -10,10 +10,9 @@
 #This is useful for minimizing downtime during infrastructure changes and ensuring that a new resource is successfully created before removing the old one.
   
   
-
 provider "google" {
- 
 }
+
 
 
 
