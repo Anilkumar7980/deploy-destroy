@@ -11,6 +11,7 @@
   
   
 provider "google" {
+  credentials = file("C:/Users/danil/Downloads/key.json")
 }
 
 
