@@ -10,9 +10,6 @@
 #This is useful for minimizing downtime during infrastructure changes and ensuring that a new resource is successfully created before removing the old one.
   
   
-provider "google" {
-  
-}
 
 
 
@@ -120,6 +117,10 @@ resource "google_compute_subnetwork" "public_subnet" {
 }
 
 
+provider "google" {
+  project = "project-7989"
+  region  = "asia-south2"
+}
 
 resource "google_project_service" "kubernetes" {
   service            = "container.googleapis.com"
@@ -226,40 +227,17 @@ resource "google_compute_instance" "jump_box" {
   network_interface {
     network            = google_compute_network.vpc.name
     subnetwork         = google_compute_subnetwork.public_subnet.name
-    subnetwork_project = var.project_id
+    subnetwork_project = var.project_id # Explicitly specify the project
   }
+  
 
+  
+  // Enable IAP-based access
   tags = ["jump-box"]
   service_account {
     scopes = ["https://www.googleapis.com/auth/cloud-platform"]
   }
-
-  metadata = {
-    windows-startup-script-ps1 = <<EOF
-# PowerShell script to download kubectl and add it to the system PATH
-
-# Create directory for kubectl
-$kubectlDir = "C:\\kubectl"
-New-Item -ItemType Directory -Force -Path $kubectlDir
-
-# Download kubectl.exe
-Invoke-WebRequest -Uri "https://storage.googleapis.com/kubernetes-release/release/v1.20.0/bin/windows/amd64/kubectl.exe" -OutFile "$kubectlDir\\kubectl.exe"
-
-# Add the kubectl directory to the system PATH
-$oldPath = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine)
-if (-not $oldPath.Contains($kubectlDir)) {
-    $newPath = $oldPath + ";" + $kubectlDir
-    [System.Environment]::SetEnvironmentVariable('Path', $newPath, [System.EnvironmentVariableTarget]::Machine)
 }
-
-# Refresh the environment variables for this session
-$env:Path = [System.Environment]::GetEnvironmentVariable('Path', [System.EnvironmentVariableTarget]::Machine)
-EOF
-  }
-}
-
-#
-
 
 resource "google_compute_firewall" "allow_iap_to_jump_box" {
   project = var.project_id
