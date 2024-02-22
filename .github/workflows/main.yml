@@ -47,9 +47,14 @@ jobs:
     
 
     - name: Authenticate with service account and get K8s credentials
+      env:
+        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
       run: |
-        gcloud auth activate-service-account --key-file "$GCP_SA_KEY"
-        gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project "${{ secrets.GCP_PROJECT_ID }}"
+        echo "$GCP_SA_KEY" > gcp-service-account-key.json
+        gcloud auth activate-service-account --key-file gcp-service-account-key.json
+        gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+        rm gcp-service-account-key.json
+
 
     
     - name: Deploy Application
