@@ -44,13 +44,9 @@ jobs:
         install_components: 'gke-gcloud-auth-plugin'
         export_default_credentials: true
      
-          
     - name: Select existing Google Cloud account
-      run: gcloud config set account ACCOUNT
-        with:
-          args: ["--project", "${{ secrets.GCP_PROJECT_ID }}"]
-        env:
-          ACCOUNT: "danilkumaramazon01@gmail.com"  # Replace with your email address
+      run: gcloud config set account "danilkumaramazon01@gmail.com" --project "${{ secrets.GCP_PROJECT_ID }}"
+
 
     - name: Get K8s Credentials
       run: |
