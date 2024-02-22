@@ -18,7 +18,12 @@ jobs:
         project_id: ${{ secrets.GCP_PROJECT_ID }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
-
+        
+    - name: Configure gcloud CLI
+      run: |
+        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
+        gcloud auth configure-docker
+        
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v1
 
@@ -54,7 +59,7 @@ jobs:
     needs: build
     steps:
       - name: Wait for 25 minutes
-        uses: jakejarvis/wait-action@master
+        uses: jakejarvis/wait-action@main
         with:
           time: '25m'
 
