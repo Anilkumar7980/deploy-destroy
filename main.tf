@@ -118,6 +118,7 @@ resource "google_compute_subnetwork" "public_subnet" {
 
 
 provider "google" {
+  credentials = file("C:/Users/danil/Downloads/key")
   project = "project-7989"
   region  = "asia-south2"
 }
