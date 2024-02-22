@@ -19,11 +19,7 @@ jobs:
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
         
-    - name: Configure gcloud CLI
-      run: |
-        gcloud config set project ${{ secrets.GCP_PROJECT_ID }}
-        gcloud auth configure-docker
-        
+    
     - name: Install Terraform
       uses: hashicorp/setup-terraform@v1
 
@@ -40,11 +36,12 @@ jobs:
       env:
         GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
 
-    - name: Set up GCP Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2.1.0
+    - name: install the gcloud cli
+      uses: google-github-actions/setup-gcloud@v0
       with:
-        project_id: ${{ secrets.GCP_PROJECT_ID }}
-        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: ${{ secrets.GOOGLE_PROJECT }}
+        service_account_key: ${{ secrets.GOOGLE_APPLICATION_CREDENTIALS }}
+        install_components: 'gke-gcloud-auth-plugin'
         export_default_credentials: true
 
 
