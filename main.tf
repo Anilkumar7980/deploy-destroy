@@ -11,7 +11,7 @@
   
   
 provider "google" {
-  credentials = file("var.credentials")
+  
 }
 
 
