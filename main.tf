@@ -245,9 +245,8 @@ resource "google_compute_instance" "jump_box" {
       gcloud components install kubectl -q
       
       
-      echo "$GCP_SA_KEY" > gcp-service-account-key.json
-      gcloud auth activate-service-account --key-file gcp-service-account-key.json
-      gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+     
+     
     EOT
   }
 
