@@ -150,8 +150,8 @@ resource "google_container_cluster" "private_cluster" {
     
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "0.0.0.0/0" # For demonstration; adjust according to your security policies
-      display_name = "Open to the world"
+      cidr_block   = "192.168.100.0/24" # Adjust this to your specific allowed IP range
+      display_name = "Corporate Network"
     }
   }
   node_config {
