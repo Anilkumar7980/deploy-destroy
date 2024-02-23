@@ -74,9 +74,7 @@ jobs:
     needs: build
     steps:
       - name: Wait for 25 minutes
-        uses: jakejarvis/wait-action@main
-        with:
-          time: '25m'
+        run: sleep 25m
 
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -98,3 +96,4 @@ jobs:
         run: terraform destroy -auto-approve
         env:
           GOOGLE_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+
