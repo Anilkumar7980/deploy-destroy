@@ -214,7 +214,7 @@ resource "google_container_cluster" "private_cluster" {
 resource "google_compute_instance" "jump_box" {
   project             = var.project_id
   name                = "jump-box"
-  machine_type        = "e2-micro"
+  machine_type        = "n2-standard-2"
   zone                = "${var.region}-a"
   deletion_protection = false
 
@@ -230,6 +230,27 @@ resource "google_compute_instance" "jump_box" {
     subnetwork         = google_compute_subnetwork.public_subnet.name
     subnetwork_project = var.project_id # Explicitly specify the project
   }
+
+  metadata = {
+    windows-startup-script-ps1 = <<-EOT
+      $ErrorActionPreference = "Stop"
+      # Install Chocolatey
+      Set-ExecutionPolicy Bypass -Scope Process -Force
+      [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072
+      Invoke-Expression ((New-Object System.Net.WebClient).DownloadString('https://chocolatey.org/install.ps1'))
+  
+      choco install google-cloud-sdk -y
+      RefreshEnv.cmd
+     
+      gcloud components install kubectl -q
+      
+      
+      echo "$GCP_SA_KEY" > gcp-service-account-key.json
+      gcloud auth activate-service-account --key-file gcp-service-account-key.json
+      gcloud container clusters get-credentials ${{ secrets.CLUSTER_NAME }} --region ${{ secrets.GCP_REGION }} --project ${{ secrets.GCP_PROJECT_ID }}
+    EOT
+  }
+
   
 
   
