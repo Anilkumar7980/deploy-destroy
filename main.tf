@@ -49,7 +49,7 @@ resource "google_compute_firewall" "allow_internal" {
     ports    = ["0-65535"]
   }
 
-  source_ranges = ["10.5.0.0/20", "10.5.16.0/20"]
+  source_ranges = ["10.0.1.0/24", "10.0.2.0/24"]
 }
 
 
@@ -103,7 +103,7 @@ resource "google_compute_network" "vpc" {
 resource "google_compute_subnetwork" "gke_subnet" {
   name          = "gke-subnet"
   project       = var.project_id
-  ip_cidr_range = "10.5.0.0/20"
+  ip_cidr_range = "10.0.2.0/24"
   region        = var.region
   network       = google_compute_network.vpc.name
 }
@@ -111,7 +111,7 @@ resource "google_compute_subnetwork" "gke_subnet" {
 resource "google_compute_subnetwork" "public_subnet" {
   project       = var.project_id
   name          = "public-subnet"
-  ip_cidr_range = "10.5.16.0/20"
+  ip_cidr_range = "10.0.1.0/24"
   region        = var.region
   network       = google_compute_network.vpc.name
 }
@@ -150,8 +150,8 @@ resource "google_container_cluster" "private_cluster" {
     
   master_authorized_networks_config {
     cidr_blocks {
-      cidr_block   = "192.168.100.0/24" # Adjust this to your specific allowed IP range
-      display_name = "Corporate Network"
+      cidr_block   = "10.0.1.0/24" 
+      display_name = "Jump Box   Access"
     }
   }
   node_config {
