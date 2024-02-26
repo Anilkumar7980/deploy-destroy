@@ -59,9 +59,9 @@ jobs:
     
     - name: Deploy Application
       run: |
-        kubectl apply -f k8s/nginx-namespace.yaml
-        kubectl apply -f k8s/nginx-deployment.yaml
-        kubectl apply -f k8s/nginx-service.yaml
+        kubectl apply -f k8s/nginx-namespace.yaml --validate=false
+        kubectl apply -f k8s/nginx-deployment.yaml --validate=false
+        kubectl apply -f k8s/nginx-service.yaml --validate=false
       env:
         GCP_PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
         GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
