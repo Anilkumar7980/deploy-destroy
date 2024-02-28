@@ -153,10 +153,6 @@ resource "google_container_cluster" "private_cluster" {
       cidr_block   = "10.0.1.0/24" 
       display_name = "Jump Box   Access"
     }
-  }
-
-
-  master_authorized_networks_config {
     dynamic "cidr_blocks" {
       for_each = var.github_actions_ip_ranges
       content {
@@ -165,6 +161,8 @@ resource "google_container_cluster" "private_cluster" {
       }
     }
   }
+
+  
   node_config {
     preemptible  = false
     machine_type = "e2-medium"
