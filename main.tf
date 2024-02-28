@@ -11,6 +11,20 @@
   
   
 
+resource "google_compute_firewall" "allow_gke_outbound_internet" {
+  name    = "allow-gke-outbound-internet"
+  network = google_compute_network.vpc.name
+  project = "project-7989"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  direction = "EGRESS"
+  destination_ranges = ["0.0.0.0/0"]
+  target_tags  = ["private-cluster1", "private"]
+}
 
 
 
