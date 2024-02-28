@@ -17,7 +17,7 @@
 
 resource "google_compute_firewall" "allow_https_from_github_actions" {
   name    = "allow-https-from-github-actions"
-  network = "projects/project-7989/global/networks/banking-vpc"
+  network = "google_compute_network.vpc.name"
   project     = "project-7989"
   
 
