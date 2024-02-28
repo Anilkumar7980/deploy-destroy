@@ -15,17 +15,26 @@
   
 
 
-resource "google_compute_firewall" "allow_https_from_github_actions" {
-  name    = "allow-https-from-github-actions"
-  network = google_compute_network.vpc.name // Correct reference to the VPC network's name
-  project = "project-7989"
+resource "google_compute_firewall" "allow_github_actions_to_gke_master" {
+  name    = "allow-github-actions-to-gke-master"
+  network = google_compute_network.vpc.name
 
   allow {
     protocol = "tcp"
     ports    = ["443"]
   }
 
-  source_ranges = values(var.github_actions_ip_ranges)
+  // Updated source ranges to include GitHub Actions IP ranges
+  source_ranges = [
+    "192.30.252.0/22", // Adjusted to cover the correct range
+    "185.199.108.0/22",
+  ]
+
+  // The target_tags field should reference the appropriate tag used by your GKE master nodes.
+  // This example assumes you have a specific tag for your GKE master. If not, adjust as needed.
+  // Note: GKE does not expose master nodes directly for tagging, so this is more about targeting the rule appropriately. 
+  // For GKE, you typically don't tag master nodes but ensure the rule applies to the master's IP range.
+  description = "Allow GitHub Actions runners to access the GKE master"
 }
 
 
