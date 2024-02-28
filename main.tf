@@ -19,7 +19,7 @@ resource "google_compute_firewall" "allow_https_from_github_actions" {
   name    = "allow-https-from-github-actions"
   network = "projects/project-7989/global/networks/banking-vpc"
   project     = "project-7989"
-  region      = "var.region"
+  
 
   allow {
     protocol = "tcp"
