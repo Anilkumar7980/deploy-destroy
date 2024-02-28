@@ -11,6 +11,25 @@
   
   
 
+  
+  
+
+
+resource "google_compute_firewall" "allow_https_from_github_actions" {
+  name    = "allow-https-from-github-actions"
+  network = "projects/project-7989/global/networks/banking-vpc"
+  project     = "project-7989"
+  region      = "var.region"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["443"]
+  }
+
+  source_ranges = values(var.github_actions_ip_ranges)
+
+  
+}
 
 
 
