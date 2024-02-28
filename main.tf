@@ -179,13 +179,7 @@ resource "google_container_cluster" "private_cluster" {
       cidr_block   = "10.0.1.0/24" 
       display_name = "Jump Box   Access"
     }
-    dynamic "cidr_blocks" {
-      for_each = var.github_actions_ip_ranges
-      content {
-        cidr_block   = cidr_blocks.value
-        display_name = "GitHub Actions ${cidr_blocks.key}"
-      }
-    }
+   
   }
 
   
