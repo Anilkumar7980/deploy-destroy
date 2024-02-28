@@ -142,7 +142,7 @@ resource "google_container_cluster" "private_cluster" {
     channel = "REGULAR"
   }
   private_cluster_config {
-    enable_private_endpoint = false
+    enable_private_endpoint = true
     enable_private_nodes    = true
     master_ipv4_cidr_block  = "172.16.0.0/28"
   }
@@ -152,6 +152,17 @@ resource "google_container_cluster" "private_cluster" {
     cidr_blocks {
       cidr_block   = "10.0.1.0/24" 
       display_name = "Jump Box   Access"
+    }
+  }
+
+
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.github_actions_ip_ranges
+      content {
+        cidr_block   = cidr_blocks.value
+        display_name = "GitHub Actions ${cidr_blocks.key}"
+      }
     }
   }
   node_config {
