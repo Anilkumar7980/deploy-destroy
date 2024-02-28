@@ -17,9 +17,8 @@
 
 resource "google_compute_firewall" "allow_https_from_github_actions" {
   name    = "allow-https-from-github-actions"
-  network = "google_compute_network.vpc.name"
-  project     = "project-7989"
-  
+  network = google_compute_network.vpc.name // Correct reference to the VPC network's name
+  project = "project-7989"
 
   allow {
     protocol = "tcp"
@@ -27,9 +26,8 @@ resource "google_compute_firewall" "allow_https_from_github_actions" {
   }
 
   source_ranges = values(var.github_actions_ip_ranges)
-
-  
 }
+
 
 
 
