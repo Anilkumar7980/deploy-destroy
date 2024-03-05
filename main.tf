@@ -15,27 +15,7 @@
   
 
 
-resource "google_compute_firewall" "allow_github_actions_to_gke_master" {
-  name    = "allow-github-actions-to-gke-master"
-  network = google_compute_network.vpc.name
 
-  allow {
-    protocol = "tcp"
-    ports    = ["443"]
-  }
-
-  // Updated source ranges to include GitHub Actions IP ranges
-  source_ranges = [
-    "192.30.252.0/22", // Adjusted to cover the correct range
-    "185.199.108.0/22",
-  ]
-
-  // The target_tags field should reference the appropriate tag used by your GKE master nodes.
-  // This example assumes you have a specific tag for your GKE master. If not, adjust as needed.
-  // Note: GKE does not expose master nodes directly for tagging, so this is more about targeting the rule appropriately. 
-  // For GKE, you typically don't tag master nodes but ensure the rule applies to the master's IP range.
-  description = "Allow GitHub Actions runners to access the GKE master"
-}
 
 
 
@@ -124,6 +104,10 @@ resource "google_compute_network" "vpc" {
   name                    = "banking-vpc"
   project                 = var.project_id
   auto_create_subnetworks = false
+  deletion_protection = false
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 resource "google_compute_subnetwork" "gke_subnet" {
@@ -132,6 +116,10 @@ resource "google_compute_subnetwork" "gke_subnet" {
   ip_cidr_range = "10.0.2.0/24"
   region        = var.region
   network       = google_compute_network.vpc.name
+  lifecycle {
+    create_before_destroy = true
+  }
+  
 }
 
 resource "google_compute_subnetwork" "public_subnet" {
@@ -140,6 +128,9 @@ resource "google_compute_subnetwork" "public_subnet" {
   ip_cidr_range = "10.0.1.0/24"
   region        = var.region
   network       = google_compute_network.vpc.name
+  lifecycle {
+    create_before_destroy = true
+  }
 }
 
 
@@ -152,6 +143,7 @@ provider "google" {
 resource "google_project_service" "kubernetes" {
   service            = "container.googleapis.com"
   disable_on_destroy = false
+  
 }
 
 
@@ -180,6 +172,9 @@ resource "google_container_cluster" "private_cluster" {
       display_name = "Jump Box   Access"
     }
    
+  }
+  lifecycle {
+    create_before_destroy = true
   }
 
   
@@ -246,6 +241,9 @@ resource "google_compute_instance" "jump_box" {
   machine_type        = "n2-standard-2"
   zone                = "${var.region}-a"
   deletion_protection = false
+  lifecycle {
+    create_before_destroy = true
+  }
 
   boot_disk {
     initialize_params {
