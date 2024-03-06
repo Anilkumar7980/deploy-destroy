@@ -13,7 +13,11 @@
 
   
   
-
+provider "google" {
+  
+  project = "project-7989"
+  region  = "asia-south2"
+}
 
 
 
@@ -134,11 +138,7 @@ resource "google_compute_subnetwork" "public_subnet" {
 }
 
 
-provider "google" {
-  
-  project = "project-7989"
-  region  = "asia-south2"
-}
+
 
 resource "google_project_service" "kubernetes" {
   service            = "container.googleapis.com"
