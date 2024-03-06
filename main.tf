@@ -108,7 +108,7 @@ resource "google_compute_network" "vpc" {
   name                    = "banking-vpc"
   project                 = var.project_id
   auto_create_subnetworks = false
-  deletion_protection = false
+  
   lifecycle {
     create_before_destroy = true
   }
