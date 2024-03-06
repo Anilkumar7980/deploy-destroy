@@ -68,14 +68,14 @@ jobs:
         CLUSTER_NAME: ${{ secrets.CLUSTER_NAME }}
         GCP_REGION: ${{ secrets.GCP_REGION }}
 
-    destroy:
-    name: Scheduled Destroy Infrastructure
-    runs-on: ubuntu-latest
-    needs: build
-    if: always() # This ensures the job runs regardless of the previous job's outcome
-    steps:
-      - name: Wait for 1 minutes
-        run: sleep 25m
+  destroy:
+     name: Scheduled Destroy Infrastructure
+     runs-on: ubuntu-latest
+     needs: build
+     if: always() # This ensures the job runs regardless of the previous job's outcome
+     steps:
+      - name: Wait for 2 minutes
+        run: sleep 2m
 
       - name: Checkout Repository
         uses: actions/checkout@v2
